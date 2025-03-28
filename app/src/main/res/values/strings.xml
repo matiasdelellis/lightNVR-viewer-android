@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">LightNVR Viewer</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="loginLabel">Login</string>
+    <string name="passowordHint">Passoword</string>
+    <string name="userameHint">Userame</string>
+    <string name="serverHint">https://</string>
+    <string name="stream_comment">%dx%d ⸱ %d fps ⸱ %s</string>
+    <string name="required_configuration">Required configuration</string>
+    <string name="streams">Streams</string>
+</resources>
