@@ -59,6 +59,9 @@ public class ApiClient {
         return this.protocol + getCredentials() + "@" + this.baseUrl + "/hls/" + name + "/index.m3u8";
     }
 
+    public String getRecordingUrl(int recordingId) {
+        return this.protocol + getCredentials() + "@" + this.baseUrl + "/api/recordings/play/" + recordingId;
+    }
     public String getAuthorization() {
         String credentials = getCredentials();
         return "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.URL_SAFE|Base64.NO_WRAP);
