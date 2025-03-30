@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import ar.com.delellis.lightnvrviewer.api.ApiClient;
 import ar.com.delellis.lightnvrviewer.api.ApiService;
 import ar.com.delellis.lightnvrviewer.api.Recording;
 import ar.com.delellis.lightnvrviewer.api.Recordings;
+import ar.com.delellis.lightnvrviewer.api.Stream;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,22 +40,34 @@ public class VideoActivity extends AppCompatActivity {
     private VlcPlayer vlcPlayer = null;
     private VLCVideoLayout videoLayout = null;
 
+    private Stream currentStream = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
-        FrameLayout frameLayout = findViewById(R.id.frameLayout);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.video_toolbar);
+        Intent intent = getIntent();
+        currentStream = (Stream) intent.getSerializableExtra("stream");
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.video_toolbar);
         setSupportActionBar(myToolbar);
+        FrameLayout frameLayout = findViewById(R.id.frameLayout);
 
         int orientation =  getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             myToolbar.setVisibility(VISIBLE);
+            findViewById(R.id.recording_list).setVisibility(VISIBLE);
+
+            int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+            int videoWidth = currentStream.getWidth();
+            int videoHeight = currentStream.getHeight();
+            frameLayout.getLayoutParams().height = videoHeight * screenWidth / videoWidth;
         }
         else {
             myToolbar.setVisibility(GONE);
+            findViewById(R.id.recording_list).setVisibility(GONE);
+
             frameLayout.getLayoutParams().height = -1;
         }
 
@@ -77,8 +91,8 @@ public class VideoActivity extends AppCompatActivity {
 
         vlcPlayer.attachView(videoLayout);
 
-        Intent intent = getIntent();
-        String streamName = intent.getStringExtra("stream-name");
+        String streamName = currentStream.getName();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(streamName);

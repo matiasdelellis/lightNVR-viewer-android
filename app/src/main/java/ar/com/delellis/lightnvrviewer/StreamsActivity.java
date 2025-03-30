@@ -33,7 +33,7 @@ public class StreamsActivity extends AppCompatActivity {
             Stream stream = streamsList.get(recyclerView.getChildAdapterPosition(view));
 
             Intent videoIntent = new Intent(StreamsActivity.this, VideoActivity.class);
-            videoIntent.putExtra("stream-name", stream.getName());
+            videoIntent.putExtra("stream", stream);
             StreamsActivity.this.startActivity(videoIntent);
         });
 
