@@ -4,9 +4,11 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -41,8 +43,19 @@ public class VideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
+        FrameLayout frameLayout = findViewById(R.id.frameLayout);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.video_toolbar);
+
         setSupportActionBar(myToolbar);
+
+        int orientation =  getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            myToolbar.setVisibility(VISIBLE);
+        }
+        else {
+            myToolbar.setVisibility(GONE);
+            frameLayout.getLayoutParams().height = -1;
+        }
 
         vlcPlayer = VlcPlayer.getInstance(this);
         vlcPlayer.setEventListener(event -> {
