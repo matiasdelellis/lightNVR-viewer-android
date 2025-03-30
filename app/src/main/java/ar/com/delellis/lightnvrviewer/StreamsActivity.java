@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -19,6 +19,9 @@ public class StreamsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streams);
+
+        Toolbar myToolbar = findViewById(R.id.streams_toolbar);
+        setSupportActionBar(myToolbar);
 
         Intent intent = getIntent();
         streamsList = (List<Stream>) intent.getSerializableExtra("streams-list");
