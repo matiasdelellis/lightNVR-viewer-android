@@ -55,7 +55,7 @@ public class ApiClient {
         return apiService;
     }
 
-    public String getVideoUrl(String name) {
+    public String getLiveUrl(String name) {
         return this.protocol + getCredentials() + "@" + this.baseUrl + "/hls/" + name + "/index.m3u8";
     }
 

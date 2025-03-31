@@ -100,7 +100,7 @@ public class VideoActivity extends AppCompatActivity {
 
         getRecordings(streamName, 1, 20);
 
-        String videoUrl = ApiClient.getInstance().getVideoUrl(streamName);
+        String videoUrl = ApiClient.getInstance().getLiveUrl(streamName);
         Log.i(TAG, "Playing video url: " + videoUrl);
         vlcPlayer.playUri(Uri.parse(videoUrl));
     }
@@ -136,15 +136,24 @@ public class VideoActivity extends AppCompatActivity {
             public void onResponse(Call<Recordings> call, Response<Recordings> response) {
                 Recordings recordings = response.body();
                 List<Recording> recordingList = recordings.getRecordings();
-                Log.d(TAG, "Recording count" + recordings.getRecordings().size());
-                Log.d(TAG, "Recording count" + recordings.getPagination().getTotal());
+
+                Recording live = new Recording();
+                live.setId(-1);
+                live.setStream(streamName);
+                recordingList.addFirst(live);
 
                 RecyclerView recyclerView = findViewById(R.id.recording_list);
 
                 RecordingAdapter recordingAdapter = new RecordingAdapter(VideoActivity.this, recordingList);
                 recordingAdapter.setOnClickListener(view -> {
                     Recording recording = recordingList.get(recyclerView.getChildAdapterPosition(view));
-                    String recordingUrl = apiClient.getRecordingUrl(recording.getId());
+                    String recordingUrl = null;
+                    int recordingId = recording.getId();
+                    if (recordingId > 0) {
+                        recordingUrl = apiClient.getRecordingUrl(recording.getId());
+                    } else {
+                        recordingUrl = apiClient.getLiveUrl(recording.getStream());
+                    }
 
                     Log.i(TAG, "Playing video url: " + recordingUrl);
                     vlcPlayer.playUri(Uri.parse(recordingUrl));

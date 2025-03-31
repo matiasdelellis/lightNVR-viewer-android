@@ -1,5 +1,7 @@
 package ar.com.delellis.lightnvrviewer;
 
+import static android.view.View.GONE;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +40,15 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.Reco
     @Override
     public void onBindViewHolder(@NonNull RecordingAdapter.RecordingAdapterHolder holder, int position) {
         Recording recording = recordingList.get(position);
+        if (recording.getId() > 0) {
+            holder.recordingNameView.setText(Util.getLocalTime(recording.getStartTime()));
+            String length = String.format(context.getString(R.string.seconds_format),recording.getDuration());
+            holder.recordingLengthView.setText(length);
+        } else {
+            holder.recordingNameView.setText(R.string.live_view);
+            holder.recordingLengthView.setVisibility(GONE);
+            holder.recordingImageView.setImageDrawable(context.getDrawable(R.drawable.ic_play_outline_24));}
 
-        String recordingTime = recording.getStartTime();
-        holder.recordingNameView.setText(Util.getLocalTime(recordingTime));
-        String length = String.format(context.getString(R.string.seconds_format),recording.getDuration());
-        holder.recordingLengthView.setText(length);
     }
 
     @Override

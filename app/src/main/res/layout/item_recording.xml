@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:src="@drawable/ic_play_outline_24"
+            android:src="@drawable/ic_replay_24"
             card_view:tint="@color/black"/>
 
         <TextView
@@ -38,7 +38,7 @@
             android:maxLines="1"
             android:textSize="14sp"
             android:singleLine="true"
-            android:gravity="center"
+            android:gravity="start|center"
             tools:text="@tools:sample/lorem/random"/>
 
         <TextView
