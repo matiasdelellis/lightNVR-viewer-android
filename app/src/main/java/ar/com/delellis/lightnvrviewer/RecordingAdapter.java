@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ar.com.delellis.lightnvrviewer.api.Recording;
+import ar.com.delellis.lightnvrviewer.api.Util;
 
 public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.RecordingAdapterHolder> implements View.OnClickListener {
 
@@ -38,7 +39,8 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.Reco
     public void onBindViewHolder(@NonNull RecordingAdapter.RecordingAdapterHolder holder, int position) {
         Recording recording = recordingList.get(position);
 
-        holder.recordingNameView.setText(recording.getStartTime());
+        String recordingTime = recording.getStartTime();
+        holder.recordingNameView.setText(Util.getLocalTime(recordingTime));
         String length = String.format(context.getString(R.string.seconds_format),recording.getDuration());
         holder.recordingLengthView.setText(length);
     }
