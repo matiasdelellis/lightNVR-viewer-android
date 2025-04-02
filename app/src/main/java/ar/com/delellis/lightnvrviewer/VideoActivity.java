@@ -2,14 +2,18 @@ package ar.com.delellis.lightnvrviewer;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static android.widget.Toast.LENGTH_LONG;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -18,10 +22,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.util.VLCVideoLayout;
 
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import ar.com.delellis.lightnvrviewer.api.ApiClient;
@@ -29,6 +40,7 @@ import ar.com.delellis.lightnvrviewer.api.ApiService;
 import ar.com.delellis.lightnvrviewer.api.Recording;
 import ar.com.delellis.lightnvrviewer.api.Recordings;
 import ar.com.delellis.lightnvrviewer.api.Stream;
+import ar.com.delellis.lightnvrviewer.api.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,6 +115,9 @@ public class VideoActivity extends AppCompatActivity {
         String videoUrl = ApiClient.getInstance().getLiveUrl(streamName);
         Log.i(TAG, "Playing video url: " + videoUrl);
         vlcPlayer.playUri(Uri.parse(videoUrl));
+
+        FloatingActionButton takeSnapshot = findViewById(R.id.takeSnapshot);
+        takeSnapshot.setOnClickListener(v -> takeSnapshot());
     }
 
     @Override
@@ -150,7 +165,7 @@ public class VideoActivity extends AppCompatActivity {
                     String recordingUrl = null;
                     int recordingId = recording.getId();
                     if (recordingId > 0) {
-                        recordingUrl = apiClient.getRecordingUrl(recording.getId());
+                        recordingUrl = apiClient.getRecordingUrl(recordingId);
                     } else {
                         recordingUrl = apiClient.getLiveUrl(recording.getStream());
                     }
@@ -167,6 +182,27 @@ public class VideoActivity extends AppCompatActivity {
             public void onFailure(Call<Recordings> call, Throwable throwable) {
                 // TODO
                 throwable.printStackTrace();
+            }
+        });
+    }
+    private void takeSnapshot() {
+        SurfaceView surfaceView = findViewById(org.videolan.R.id.surface_video);
+        Util.getSurfaceBitmap(surfaceView, new Util.PixelCopyListener() {
+            @Override
+            public void onSurfaceBitmapReady(Bitmap bitmap) {
+                File snapshotFile = Util.getSnapshotFile(currentStream.getName());
+                try {
+                    OutputStream out = new BufferedOutputStream(new FileOutputStream(snapshotFile));
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, out);
+                    Util.shareImage(VideoActivity.this, Uri.parse(snapshotFile.getPath()), currentStream.getName());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onSurfaceBitmapError(String errorMsg) {
+                Toast.makeText(VideoActivity.this, errorMsg, LENGTH_LONG).show();
             }
         });
     }
