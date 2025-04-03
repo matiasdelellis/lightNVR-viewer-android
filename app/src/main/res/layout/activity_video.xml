@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
-    android:background="@color/white"
-    android:fitsSystemWindows="true"
     tools:context=".VideoActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -19,8 +17,7 @@
             android:id="@+id/video_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:navigationIconTint="@color/black">
+            app:navigationIcon="@drawable/ic_arrow_back_24">
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

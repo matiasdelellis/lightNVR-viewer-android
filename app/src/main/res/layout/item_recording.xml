@@ -24,8 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:src="@drawable/ic_replay_24"
-            card_view:tint="@color/black"/>
+            android:src="@drawable/ic_replay_24"/>
 
         <TextView
             android:id="@+id/recording_name"
