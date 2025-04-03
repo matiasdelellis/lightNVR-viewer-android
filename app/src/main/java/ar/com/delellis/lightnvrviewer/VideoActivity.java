@@ -86,11 +86,11 @@ public class VideoActivity extends AppCompatActivity {
         vlcPlayer = VlcPlayer.getInstance(this);
         vlcPlayer.setEventListener(event -> {
             if (event.type == MediaPlayer.Event.Buffering) {
-                Log.d(TAG, "onEvent: Buffering");
-                findViewById(R.id.loading_card).setVisibility(VISIBLE);
-            } else {
-                Log.d(TAG, "onEvent: Not buffering?");
-                findViewById(R.id.loading_card).setVisibility(GONE);
+                if (event.getBuffering() == 100f) {
+                    findViewById(R.id.loading_card).setVisibility(GONE);
+                } else {
+                    findViewById(R.id.loading_card).setVisibility(VISIBLE);
+                }
             }
         });
 
