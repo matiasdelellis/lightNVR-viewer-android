@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
     private String protocol = null;
     private String baseUrl = null;
+    private int port = -1;
     private String username = null;
     private String password = null;
 
@@ -28,6 +29,7 @@ public class ApiClient {
 
         this.protocol = host.getProtocol() + "://";
         this.baseUrl = host.getHost();
+        this.port = host.getPort();
         this.username = username;
         this.password = password;
 
@@ -56,10 +58,16 @@ public class ApiClient {
     }
 
     public String getLiveUrl(String name) {
+        if (this.port > 0) {
+            return this.protocol + getCredentials() + "@" + this.baseUrl + ":" + this.port + "/hls/" + name + "/index.m3u8";
+        }
         return this.protocol + getCredentials() + "@" + this.baseUrl + "/hls/" + name + "/index.m3u8";
     }
 
     public String getRecordingUrl(int recordingId) {
+        if (this.port > 0) {
+            return this.protocol + getCredentials() + "@" + this.baseUrl + ":" + this.port + "/api/recordings/play/" + recordingId;
+        }
         return this.protocol + getCredentials() + "@" + this.baseUrl + "/api/recordings/play/" + recordingId;
     }
     public String getAuthorization() {
@@ -68,6 +76,9 @@ public class ApiClient {
     }
 
     private String getApiBase() {
+        if (this.port > 0) {
+            return this.protocol + this.baseUrl + ":" + this.port + "/api/";
+        }
         return this.protocol + this.baseUrl + "/api/";
     }
 
