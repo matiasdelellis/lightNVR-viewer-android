@@ -50,7 +50,7 @@ public class VideoActivity extends AppCompatActivity {
     private final String TAG = VideoActivity.class.getCanonicalName();
 
     private VlcPlayer vlcPlayer = null;
-    private VLCVideoLayout videoLayout = null;
+    private VLCVideoLayout vlcVideoLayout = null;
 
     private Stream currentStream = null;
 
@@ -87,21 +87,23 @@ public class VideoActivity extends AppCompatActivity {
         vlcPlayer.setEventListener(event -> {
             if (event.type == MediaPlayer.Event.Buffering) {
                 if (event.getBuffering() == 100f) {
-                    findViewById(R.id.loading_card).setVisibility(GONE);
+                    findViewById(R.id.loading_progress).setVisibility(GONE);
                 } else {
-                    findViewById(R.id.loading_card).setVisibility(VISIBLE);
+                    findViewById(R.id.loading_progress).setVisibility(VISIBLE);
                 }
             }
         });
 
-        videoLayout = findViewById(R.id.videoLayout);
+        vlcVideoLayout = findViewById(R.id.vlc_video_Layout);
+
+        vlcVideoLayout.setOnTouchListener(new VideoTouchListener(vlcVideoLayout));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        vlcPlayer.attachView(videoLayout);
+        vlcPlayer.attachView(vlcVideoLayout);
 
         String streamName = currentStream.getName();
 
@@ -110,7 +112,7 @@ public class VideoActivity extends AppCompatActivity {
             actionBar.setTitle(streamName);
         }
 
-        getRecordings(streamName, 1, 20);
+        updateRecordingsList(streamName, 1, 20);
 
         String videoUrl = ApiClient.getInstance().getLiveUrl(streamName);
         Log.i(TAG, "Playing video url: " + videoUrl);
@@ -141,7 +143,7 @@ public class VideoActivity extends AppCompatActivity {
         return true;
     }
 
-    private void getRecordings(String streamName, int page, int limit) {
+    private void updateRecordingsList(String streamName, int page, int limit) {
         ApiClient apiClient = ApiClient.getInstance();
         ApiService apiService = ApiClient.getApiService();
 
